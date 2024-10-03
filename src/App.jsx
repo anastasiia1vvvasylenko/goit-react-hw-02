@@ -9,9 +9,12 @@ import Notification from './components/Notification/Notification';
 function App() {
   const [feedback, setFeedback] = useState(() => {
     const val = localStorage.getItem('feedback');
-    const parsedVal = JSON.parse(val) ?? 0;
-    return parsedVal;
+    return val ? JSON.parse(val) : { good: 0, neutral: 0, bad: 0 };
   });
+
+  useEffect(() => {
+    localStorage.setItem('feedback', JSON.stringify(feedback));
+  }, [feedback]);
 
   const updateFeedback = type => {
     setFeedback(prevFeedback => ({
@@ -30,10 +33,6 @@ function App() {
 
   const totalFeedback = feedback.good + feedback.neutral + feedback.bad;
   const positiveFeedback = Math.round((feedback.good / totalFeedback) * 100);
-
-  useEffect(() => {
-    localStorage.setItem('feedback', JSON.stringify(feedback));
-  }, [feedback]);
 
   return (
     <>
